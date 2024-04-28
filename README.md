@@ -7,7 +7,7 @@
 
 ## Usage
 ```bash
-usage: main.py [-h] [-i INPUT] [-o OUTPUT] [-s] [-w WINDOW] [-m MODEL] [-p PARALLEL] [-l LANGUAGE] [-u]
+usage: main.py [-h] [-i INPUT] [-o OUTPUT] [-s] [-w WINDOW] [-m MODEL] [-p PARALLEL] [-l LANGUAGE] [-u] [-n]
 
 options:
   -h, --help            show this help message and exit
@@ -24,6 +24,7 @@ options:
                         The max worker in thread pool
   -l LANGUAGE, --language LANGUAGE
   -u, --update          Render in real time when nodes or edges changed
+  -n, --neo4j           Insert the knowledge graph to neo4j database
 ```
 
 - `-i, --input`: 输入文件路径，支持纯文本文件和PDF。（必需）
@@ -34,3 +35,4 @@ options:
 - `-p, --parallel`: 线程池中的最大工作线程数，类型为整数，默认为1。
 - `-l, --language`: 使用的语言，默认为"中文"。
 - `-u, --update`: 当节点或边变化时实时渲染。
+- `-n, --neo4j`: 将知识图谱保存到Neo4j。
