@@ -41,6 +41,9 @@ class Generator:
         update: bool = True,
         retry=3,
     ):
+        self._logger.info(
+            f"window: {window}, parallel: {parallel}, split: {split}, update: {update}, retry: {retry}"
+        )
         sentences = []
         if split:
             sentences = split_sentence(content)
