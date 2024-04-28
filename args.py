@@ -2,6 +2,7 @@ import argparse
 from logging import getLogger
 
 from dotenv import load_dotenv
+import os
 
 
 class Parser:
@@ -29,7 +30,7 @@ class Parser:
             "--window",
             help="A sliding window to control the number of sentences to be processed at a time",
             type=int,
-            default=0,
+            default=1,
         )
         parser.add_argument(
             "-m", "--model", help="The model used to generate the KG", default="glm-4"
@@ -48,6 +49,12 @@ class Parser:
             help="Render in real time when nodes or edges changed",
             action="store_true",
         )
+        parser.add_argument(
+            "-n",
+            "--neo4j",
+            help="Insert the knowledge graph to neo4j database",
+            action="store_true",
+        )
         args = parser.parse_args()
 
         Parser._validate(args)
@@ -59,3 +66,12 @@ class Parser:
         if not args.input:
             logger.fatal("Please enter the filename via --input <FILENAME>")
             exit(1)
+
+        if args.neo4j:
+            if (
+                not os.getenv("NEO4J_USERNAME")
+                or not os.getenv("NEO4J_PASSWORD")
+                or not os.getenv("NEO4J_URI")
+            ):
+                logger.fatal("Please fill the neo4j information in .env")
+                exit(1)
