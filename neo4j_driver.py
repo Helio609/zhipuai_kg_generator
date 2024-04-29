@@ -59,5 +59,5 @@ class Neo4jDriver:
         for edge in knowledge_graph.edges:
             tx.run(
                 f"MATCH (a:Node {{label:'{edge.from_}'}}), (b:Node {{label:'{edge.to}'}}) "
-                + f"CREATE (a)-[:{edge.relationship}]->(b)"
+                + f"CREATE (a)-[:`{edge.relationship}`]->(b)"
             )

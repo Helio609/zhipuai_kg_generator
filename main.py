@@ -22,17 +22,28 @@ logging.getLogger("graphviz.backend.execute").setLevel(level="ERROR")
 logging.getLogger("neo4j").setLevel(level="ERROR")
 logging.getLogger("neo4j.io").setLevel(level="ERROR")
 logging.getLogger("neo4j.pool").setLevel(level="ERROR")
+logger = logging.getLogger(__name__)
+
+
+def load_content(filename: str) -> str:
+    content: str | None = None
+    if not os.path.exists(filename):
+        logger.fatal("File does not exists")
+        exit(1)
+
+    if filename.split(".")[-1] == "pdf":
+        content = convert_pdf_to_text(filename)
+    else:
+        with open(filename, "r", encoding="utf-8") as f:
+            content = f.read()
+
+    return content
 
 
 def main():
     args = Parser.parse()
 
-    content: str | None = None
-    if args.input.split(".")[-1] == "pdf":
-        content = convert_pdf_to_text(args.input)
-    else:
-        with open(args.input, "r", encoding="utf-8") as f:
-            content = f.read()
+    content = load_content(args.input)
 
     driver: Neo4jDriver | None = None
     if args.neo4j:
@@ -41,6 +52,7 @@ def main():
             os.getenv("NEO4J_USERNAME"),
             os.getenv("NEO4J_PASSWORD"),
         )
+        logger.info("Created Neo4j client")
 
     generator = Generator(model=args.model, main_language=args.language)
     knowledge_graph = generator.generate(
@@ -53,6 +65,7 @@ def main():
     )
 
     if args.neo4j:
+        logger.info("Start insert knowledge graph")
         driver.insert_knowledge_graph(knowledge_graph)
         driver.close()
 

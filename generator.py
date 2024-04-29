@@ -10,7 +10,7 @@ from langchain_core.prompts import PromptTemplate
 from models import KnowledgeGraph
 from splitter import split_sentence
 
-TEMPLATE = """请使用给定格式以及主要语言{language}创建知识图谱:\n{format_instructions}\n确保所有的节点和边是与下文相关的:\n```\n{topic}\n```"""
+TEMPLATE = """请使用主要语言`{language}`创建知识图谱以及给定格式:\n{format_instructions}\n你需要返回包含`nodes`和`edges`的json格式。确保所有的节点和边是与下文相关的:\n```\n{topic}\n```"""
 
 
 class Generator:
@@ -65,8 +65,8 @@ class Generator:
 
                     # self._logger.debug(f"output: {output}")
 
-                    knowledge_graph.nodes += output.nodes
-                    knowledge_graph.edges += output.edges
+                    knowledge_graph.nodes = list(set(knowledge_graph.nodes + output.nodes))
+                    knowledge_graph.edges = list(set(knowledge_graph.edges + output.edges))
 
                     self._logger.info(
                         f"Processed {i + 1} part of contents, node: {len(knowledge_graph.nodes)}, edge: {len(knowledge_graph.edges)}"
