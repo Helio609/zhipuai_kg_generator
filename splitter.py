@@ -5,7 +5,7 @@ def split_sentence(content: str) -> list[str]:
     """Split the content with the specific delims"""
     sentences = re.split("(\.|。|\!|！|\?|？)", content)
     return [
-        sentence
+        sentence.replace('\n\n', '')
         for i, sentence in enumerate(sentences)
         if i % 2 == 0 and len(sentence) != 0
     ]

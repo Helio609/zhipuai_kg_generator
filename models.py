@@ -11,12 +11,32 @@ class Node(BaseModel):
     label: str = Field(..., description="Label for the node")
     type: str = Field(..., description="Type of the node")
 
+    def __hash__(self):
+        return hash((self.label, self.type))
+
+    def __eq__(self, other):
+        if isinstance(other, Node):
+            return self.label == other.label and self.type == other.type
+        return False
+
 
 class Edge(BaseModel):
     # WARING: Notice that this is "from_", not "from"
     from_: str = Field(..., alias="from", description="Origin Node label")
     to: str = Field(..., description="Destination node label")
     relationship: str = Field(..., description="Type of relationship between the nodes")
+
+    def __hash__(self):
+        return hash((self.from_, self.to, self.relationship))
+
+    def __eq__(self, other):
+        if isinstance(other, Edge):
+            return (
+                self.from_ == other.from_
+                and self.to == other.to
+                and self.relationship == other.relationship
+            )
+        return False
 
 
 class KnowledgeGraph(BaseModel):
@@ -29,7 +49,6 @@ class KnowledgeGraph(BaseModel):
         dot = Digraph(comment="Knowledge Graph", format=format, encoding="utf-8")
 
         for node in self.nodes:
-            # dot.node(node.id, f"{node.label} ({node.type})")
             dot.node(node.label, node.label, fontname="Microsoft Yahei")
 
         for edge in self.edges:
