@@ -59,11 +59,11 @@ class Generator:
             retry_ = retry
             while retry_:
                 try:
-                    self._logger.debug(f"input: {text}")
+                    # self._logger.debug(f"input: {text}")
 
                     output = self._chain.invoke({"topic": text})
 
-                    self._logger.debug(f"output: {output}")
+                    # self._logger.debug(f"output: {output}")
 
                     knowledge_graph.nodes = list(set(knowledge_graph.nodes + output.nodes))
                     knowledge_graph.edges = list(set(knowledge_graph.edges + output.edges))
